@@ -10,32 +10,23 @@ ZIP_FILE=/resources/lambda-layer.zip
 if [ -f "$ZIP_FILE" ]; then
 echo "$ZIP_FILE exists."
 
-echo "Creating the lambda function to conceal image with encrypted text"
+echo "Creating a simple lambda function getting an event and printing the body"
 awslocal lambda create-function --function-name test-aws-local-stack_lambda \
     --zip-file fileb:///resources/lambda-layer.zip \
     --handler main.lambda_handler \
     --environment Variables="{$(cat < /resources/.env | xargs | sed 's/ /,/g')}" \
-    --runtime python3.7 \
-    --role whatever
-
-
-#echo "Creating the lambda function to retrieve decrypted text from a concealed image"
-#awslocal lambda create-function --function-name get_secret_text_from_concealed_image \
-#    --zip-file fileb:///resources/lambda-layer.zip \
-#    --handler main.get_secret_text_from_concealed_image \
-#    --environment Variables="{$(cat < /resources/.env | xargs | sed 's/ /,/g')}" \
-#    --runtime python3.7 \
-#    --role whatever
-
+    --runtime python3.8 \
+    --role whatever \
+    --region us-east-1
 
 echo "Creating required SQS queue"
-awslocal sqs create-queue --queue-name test-aws-local-stack_queue
+awslocal sqs create-queue --queue-name test-aws-local-stack_queue --region us-east-1
 
 echo "Binding Lambda to SQS queue"
 awslocal lambda create-event-source-mapping --function-name test-aws-local-stack_lambda --batch-size 1 --event-source-arn arn:aws:sqs:us-east-1:000000000000:test-aws-local-stack_queue
 
-echo "Trigger steganography lambda by sending a message to the SQS"
-awslocal sqs send-message --queue-url http://localhost:4566/000000000000/test-aws-local-stack_queue --message-body '{"image_path":"s3://images/test_image.png", "secret_text": "This is a secret text", "secret_password_key": "my_pwd"}'
+echo "Trigger lambda by sending a message to the SQS"
+awslocal sqs send-message --queue-url http://localhost:4566/000000000000/test-aws-local-stack_queue --message-body '{"Records": [{"body": "{\"test_message\":\"got it!\"}"}]}'
 
 else
     echo "$ZIP_FILE does not exist ie. triggered directly via Python."
