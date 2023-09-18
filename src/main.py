@@ -12,5 +12,12 @@ aws_endpoint_url = environ.get("AWS_ENDPOINT_URL")
 s3_client = boto3.client("s3", region_name="us-east-1", endpoint_url=aws_endpoint_url)
 
 
+def _parse_message_from_sqs(event):
+    for record in event["Records"]:
+        return json.loads(record["body"])
+
+
 def lambda_handler(event, context):
-    print(event)
+    message_body = _parse_message_from_sqs(event)
+    logger.info(f"Uploaded the concealed image to {message_body}")
+    print(message_body)
