@@ -1,0 +1,25 @@
+version: "3.7"
+networks:
+  image_crypto_steganography:
+    attachable: true
+    name: test-aws-local-stack
+services:
+  localstack:
+    image: "localstack/localstack:0.13.1"
+    networks:
+      - test-aws-local-stack
+    ports:
+      - "4566:4566"
+    volumes:
+      - ./resources/:/resources/
+      - ./resources/localstack-setup.sh:/docker-entrypoint-initaws.d/localstack-setup.sh
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      SERVICES: "lambda, sqs, s3"
+      DEFAULT_REGION: "us-east-1"
+      LAMBDA_EXECUTOR: "docker"
+      LAMBDA_REMOTE_DOCKER: "true"
+      DOCKER_HOST: "unix:///var/run/docker.sock"
+      LAMBDA_DOCKER_NETWORK: "image_crypto_steganography"
+      AWS_ACCESS_KEY_ID: "fake_key_id"
+      AWS_SECRET_ACCESS_KEY: "fake_secret_access_key"
