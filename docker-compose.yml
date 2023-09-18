@@ -1,6 +1,6 @@
 version: "3.7"
 networks:
-  image_crypto_steganography:
+  test-aws-local-stack:
     attachable: true
     name: test-aws-local-stack
 services:
@@ -20,6 +20,6 @@ services:
       LAMBDA_EXECUTOR: "docker"
       LAMBDA_REMOTE_DOCKER: "true"
       DOCKER_HOST: "unix:///var/run/docker.sock"
-      LAMBDA_DOCKER_NETWORK: "image_crypto_steganography"
+      LAMBDA_DOCKER_NETWORK: "test-aws-local-stack"
       AWS_ACCESS_KEY_ID: "fake_key_id"
       AWS_SECRET_ACCESS_KEY: "fake_secret_access_key"
