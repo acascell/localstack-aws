@@ -2,8 +2,6 @@ import json
 import logging
 import boto3
 from os import environ
-from glom import glom
-import simplejson as json
 
 
 logger = logging.getLogger(__name__)
@@ -15,5 +13,4 @@ s3_client = boto3.client("s3", region_name="us-east-1", endpoint_url=aws_endpoin
 
 
 def lambda_handler(event, context):
-    record = json.loads(glom(event["Records"][0], "body", default="{}"))
-    print(record)
+    print(event)

@@ -16,10 +16,11 @@ awslocal lambda create-function --function-name test-aws-local-stack_lambda \
     --handler main.lambda_handler \
     --environment Variables="{$(cat < /resources/.env | xargs | sed 's/ /,/g')}" \
     --runtime python3.8 \
-    --role whatever
+    --role whatever \
+    --region us-east-1
 
 echo "Creating required SQS queue"
-awslocal sqs create-queue --queue-name test-aws-local-stack_queue
+awslocal sqs create-queue --queue-name test-aws-local-stack_queue --region us-east-1
 
 echo "Binding Lambda to SQS queue"
 awslocal lambda create-event-source-mapping --function-name test-aws-local-stack_lambda --batch-size 1 --event-source-arn arn:aws:sqs:us-east-1:000000000000:test-aws-local-stack_queue
