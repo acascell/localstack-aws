@@ -34,7 +34,7 @@ awslocal sqs create-queue --queue-name test-aws-local-stack_queue
 echo "Binding Lambda to SQS queue"
 awslocal lambda create-event-source-mapping --function-name test-aws-local-stack_lambda --batch-size 1 --event-source-arn arn:aws:sqs:us-east-1:000000000000:test-aws-local-stack_queue
 
-echo "Trigger steganography lambda by sending a message to the SQS"
+echo "Trigger lambda by sending a message to the SQS"
 awslocal sqs send-message --queue-url http://localhost:4566/000000000000/test-aws-local-stack_queue --message-body '{"image_path":"s3://images/test_image.png", "secret_text": "This is a secret text", "secret_password_key": "my_pwd"}'
 
 else

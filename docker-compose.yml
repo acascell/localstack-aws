@@ -15,7 +15,7 @@ services:
       - ./resources/localstack-setup.sh:/docker-entrypoint-initaws.d/localstack-setup.sh
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      SERVICES: "lambda, sqs, s3"
+      SERVICES: "lambda, sqs"
       DEFAULT_REGION: "us-east-1"
       LAMBDA_EXECUTOR: "docker"
       LAMBDA_REMOTE_DOCKER: "true"
