@@ -19,5 +19,5 @@ def _parse_message_from_sqs(event):
 
 def lambda_handler(event, context):
     message_body = _parse_message_from_sqs(event)
-    logger.info(f"Uploaded the concealed image to {message_body}")
+    logger.info(f"Parsed message {message_body}")
     print(message_body)
